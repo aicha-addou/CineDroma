@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";  // Importation de useRouter
 
 export default function Home() {
   // Définition des états
-  const [username, setUsername] = useState(""); // État pour le nom d'utilisateur
+  const [username, setUsername] = useState(""); // État pour le nom d utilisateur
   const [password, setPassword] = useState(""); // État pour le mot de passe
-  const [error, setError] = useState(""); // État pour afficher l'erreur en cas d'authentification échouée
+  const [error, setError] = useState(""); // État pour afficher l erreur en cas d authentification échouée
   const router = useRouter(); // Déclare le hook useRouter
-// Supprimez cette ligne si la variable n'est pas utilisée
+// Supprimez cette ligne si la variable n est pas utilisée
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }), // Assure-toi que 'username' et 'password' sont bien définis
+        body: JSON.stringify({ username, password }), // Assure-toi que username et password sont bien définis
       });
 
       const data = await response.json();
@@ -50,7 +50,7 @@ export default function Home() {
       <div className="text-center text-white">
         {/* Utilisation de `Image` pour le logo */}
         <Image
-          src="/img/logo.png" // Chemin absolu vers l'image dans public
+          src="/img/logo.png" // Chemin absolu vers l image dans public
           alt="Logo Cinedroma"
           width={180}  // Largeur en pixels (équivalent de w-24 dans Tailwind)
           height={180} // Hauteur en pixels
@@ -67,7 +67,7 @@ export default function Home() {
               id="username"
               name="username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} // Mise à jour du nom d'utilisateur
+              onChange={(e) => setUsername(e.target.value)} // Mise à jour du nom d utilisateur
               required
               className="p-2 mb-4 rounded border-none outline-none text-black"
             />
