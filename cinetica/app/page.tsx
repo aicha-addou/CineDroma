@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -58,7 +58,7 @@ export default function Home() {
         />
         <div className="bg-black bg-opacity-70 p-8 rounded-lg w-80 mx-auto">
           <h2 className="text-2xl mb-6 tracking-wide">LOGIN</h2>
-          {/* Affichage du message d'erreur */}
+          {/* Affichage du message d erreur */}
           {error && <div className="text-red-500 mb-4">{error}</div>}
           <form className="flex flex-col" onSubmit={handleLogin}>
             <label htmlFor="username" className="text-left mb-2">Username</label>
