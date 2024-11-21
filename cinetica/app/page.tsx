@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";  // Importation de useRouter
 
 export default function Home() {
   // Définition des états
-  const [username, setUsername] = useState(''); // État pour le nom d'utilisateur
-  const [password, setPassword] = useState(''); // État pour le mot de passe
-  const [error, setError] = useState(''); // État pour afficher l'erreur en cas d'authentification échouée
+  const [username, setUsername] = useState(""); // État pour le nom d'utilisateur
+  const [password, setPassword] = useState(""); // État pour le mot de passe
+  const [error, setError] = useState(""); // État pour afficher l'erreur en cas d'authentification échouée
   const router = useRouter(); // Déclare le hook useRouter
 // Supprimez cette ligne si la variable n'est pas utilisée
 
