@@ -1,25 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from 'next/navigation';  // Importation de useRouter
+import { useRouter } from "next/navigation";  // Importation de useRouter
 
 export default function Home() {
   // Définition des états
-  const [isLogged, setIsLogged] = useState(false); // État pour savoir si l'utilisateur est connecté
   const [username, setUsername] = useState(''); // État pour le nom d'utilisateur
   const [password, setPassword] = useState(''); // État pour le mot de passe
   const [error, setError] = useState(''); // État pour afficher l'erreur en cas d'authentification échouée
   const router = useRouter(); // Déclare le hook useRouter
+// Supprimez cette ligne si la variable n'est pas utilisée
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/auth', {
-        method: 'POST',
+      const response = await fetch("/api/auth", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }), // Assure-toi que 'username' et 'password' sont bien définis
       });
@@ -27,17 +27,13 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setIsLogged(true); // L'utilisateur est connecté
-        setError(''); // Réinitialiser le message d'erreur
-        router.push('/accueil'); // Redirige vers la nouvelle page "accueil"
+        router.push("/accueil"); // Redirige vers la nouvelle page "accueil"
       } else {
-        setError(data.message || 'Erreur inconnue');
-        setIsLogged(false); // L'utilisateur n'est pas connecté
+        setError(data.message || "Erreur inconnue");
       }
     } catch (err) {
-      console.error('Error during login:', err);
-      setError('Une erreur est survenue. Veuillez réessayer.');
-      setIsLogged(false);
+      console.error("Error during login:", err);
+      setError("Une erreur est survenue. Veuillez réessayer.");
     }
   };
 
@@ -46,7 +42,7 @@ export default function Home() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/img/fond_auth.jpg')", 
+          backgroundImage: "url(/img/fond_auth.jpg)", 
           filter: "blur(4px)", 
           zIndex: -1, 
         }}
