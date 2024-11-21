@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 export default function Home() {
-  // Definition des etats
+// Definition des etats
   const [username, setUsername] = useState(""); // Etat pour le nom d utilisateur
   const [password, setPassword] = useState(""); // Etat pour le mot de passe
   const [error, setError] = useState(""); // Etat pour afficher l erreur en cas d authentification echouee
