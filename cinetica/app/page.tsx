@@ -3,11 +3,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 export default function Home() {
-  // Définition des états
-  const [username, setUsername] = useState(""); // État pour le nom d utilisateur
-  const [password, setPassword] = useState(""); // État pour le mot de passe
-  const [error, setError] = useState(""); // État pour afficher l erreur en cas d authentification échouée
-  const router = useRouter(); // Déclare le hook useRouter
+  // Definition des etats
+  const [username, setUsername] = useState(""); // Etat pour le nom d utilisateur
+  const [password, setPassword] = useState(""); // Etat pour le mot de passe
+  const [error, setError] = useState(""); // Etat pour afficher l erreur en cas d authentification echouee
+  const router = useRouter(); // Declare le hook useRouter
 // Supprimez cette ligne si la variable n est pas utilisée
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -19,7 +19,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }), // Assure-toi que username et password sont bien définis
+        body: JSON.stringify({ username, password }), // Assure-toi que username et password sont bien definis
       });
 
       const data = await response.json();
