@@ -1,29 +1,84 @@
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import {user as crd} from "@/repository/user"
-import bcrypt from 'bcryptjs'
+import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { user as crd } from "@/repository/user";
+import { SECRET_KEY as NEXTAUTH_SECRET } from "@/repository/user";
 
-export const authOptions = {
-    providers: [
-        CredentialsProvider({
-            name: "Username + Password",
-            credentials : { username:{}, password:{}},
-            async authorize(credentials){
-                const pwdok = await bcrypt.compare(credentials?.password||"", crd.password)
-                if(crd.username === credentials?.username && pwdok){
-                    return{
-                        id: crd.username,
-                        cd: credentials
-                    }
-                }
-                return null
-            }
-        })
-    ],
-    pages:{
-        signIn: '/login'
-    },
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+    } & DefaultSession["user"]
+  }
 }
-const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+const authOptions: NextAuthOptions = {
+secret : NEXTAUTH_SECRET,
+  providers: [
+    CredentialsProvider({
+      name: "Username + Password",
+      credentials: {
+        username: { 
+          label: "Username", 
+          type: "text",
+          placeholder: "Votre nom d'utilisateur"
+        },
+        password: { 
+          label: "Password", 
+          type: "password",
+          placeholder: "Votre mot de passe"
+        },
+      },
+      async authorize(credentials) {
+        try {
+          if (!credentials?.username || !credentials?.password) {
+            throw new Error("Identifiants manquants");
+          }
+
+          // Vérification des identifiants
+          const pwdok = await bcrypt.compare(credentials.password, crd.password);
+          
+          if (crd.username === credentials.username && pwdok) {
+            return {
+              id: crd.username,
+              name: crd.username,
+              // Vous pouvez ajouter d'autres propriétés utilisateur ici
+            };
+          }
+          
+          throw new Error("Identifiants invalides");
+        } catch (error) {
+          console.error("Erreur d'authentification:", error);
+          return null;
+        }
+      },
+    }),
+  ],
+  pages: {
+    signIn: "/login",
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 heures
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+
