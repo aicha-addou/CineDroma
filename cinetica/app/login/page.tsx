@@ -69,7 +69,7 @@ export default function Home() {
       </div>
     </div>
   );
-  async function handleClick(e: React.FormEvent<HTMLFormElement>) {
+  async function handleClick(e: React.FormEvent<HTMLButtonElement>) {
     e.preventDefault(); // Empêche le rechargement de la page
     const res = await signIn("credentials", {
         username: username,
