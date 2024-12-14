@@ -14,6 +14,7 @@ const handleLogout = async () => {
 export default function Home() {
   const { data: session, status } = useSession();
 
+  
   // Redirection si l'utilisateur n'est pas connecté
   if (status === "loading") {
     return <div>Loading...</div>; // Optionnel : afficher un message de chargement
