@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
-import SessionProviderComponent from "@/app/providers/SessionProvider";
+import { Sidebar } from "@/components/Sidebar";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
@@ -14,8 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {children}
+    <div className="flex min-h-screen bg-white dark:bg-gray-900">
+      <Sidebar />
+      <div className="ml-64 flex-1 overflow-x-hidden">
+        <div className="h-screen overflow-y-auto">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

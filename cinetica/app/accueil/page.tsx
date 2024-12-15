@@ -1,81 +1,62 @@
 // app/accueil.tsx
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { MediaCarousel } from "@/components/MediaCarousel";
+
+interface Media {
+  id: number;
+  title: string;
+  poster_path: string | null;
+  vote_average: number;
+  release_date?: string;
+  first_air_date?: string;
+}
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession();
+  const [trendingMovies, setTrendingMovies] = useState<Media[]>([]);
+  const [trendingTVShows, setTrendingTVShows] = useState<Media[]>([]);
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
-  };
+  useEffect(() => {
+    const fetchTrending = async () => {
+      try {
+        // Fetch trending movies
+        const moviesRes = await fetch('/api/movies/popular');
+        const moviesData = await moviesRes.json();
+        setTrendingMovies(moviesData.results);
+
+        // Fetch trending TV shows
+        const tvRes = await fetch('/api/shows/on-the-air');
+        const tvData = await tvRes.json();
+        setTrendingTVShows(tvData.results.map((show: any) => ({
+          ...show,
+          title: show.name // TV shows use 'name' instead of 'title'
+        })));
+      } catch (error) {
+        console.error('Error fetching trending:', error);
+      }
+    };
+
+    fetchTrending();
+  }, []);
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <div className="w-64 h-screen bg-gray-200 text-black p-4">
-        <h1 className="text-xl font-bold mb-4">Cinedroma</h1>
-        <ul>
-          <li className="mb-2">
-            <h2 className="text-lg font-semibold">Movies</h2>
-            <ul className="ml-4 mt-2">
-              <li className="mb-1">
-                <button 
-                  onClick={() => router.push('/accueil/movies/now-playing')}
-                  className="hover:underline text-left w-full"
-                >
-                  Now playing
-                </button>
-              </li>
-              <li className="mb-1">
-                <a href="#" className="hover:underline">
-                  Popular
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Top Rated
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <h2 className="text-lg font-semibold">TV Shows</h2>
-            <ul className="ml-4 mt-2">
-              <li className="mb-1">
-                <a href="#" className="hover:underline">
-                  On the air
-                </a>
-              </li>
-              <li className="mb-1">
-                <a href="#" className="hover:underline">
-                  Popular
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Top Rated
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center min-h-screen text-center">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold">Bienvenue sur la page d'accueil !</h1>
-          <p className="mt-4 text-xl">To be continued...</p>
-          <button onClick={handleLogout} className="mt-4 p-2 bg-red-500 text-white rounded">
-            Déconnexion
-          </button>
-        </div>
-      </div>
+    <div className="p-8 space-y-8">
+      <h1 className="text-3xl font-bold mb-8 dark:text-white">Découvrez</h1>
+      
+      <MediaCarousel 
+        title="Films Tendances" 
+        items={trendingMovies}
+        mediaType="movie"
+      />
+      
+      <MediaCarousel 
+        title="Séries Tendances" 
+        items={trendingTVShows}
+        mediaType="tv"
+      />
     </div>
   );
 }
