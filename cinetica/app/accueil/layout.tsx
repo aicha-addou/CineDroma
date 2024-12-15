@@ -14,12 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-900">
-      <Sidebar />
-      <div className="ml-64 flex-1 overflow-x-hidden">
-        <div className="h-screen overflow-y-auto">
-          {children}
-        </div>
-      </div>
+      <Sidebar>{children}</Sidebar>
     </div>
   );
 }
