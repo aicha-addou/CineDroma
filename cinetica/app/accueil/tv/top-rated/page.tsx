@@ -29,6 +29,7 @@ export default function TopRatedTVShowsPage() {
   if (error) {
     return <div className="p-8 text-red-500">{error}</div>
   }
+  
 
   return (
     <div className="p-8">

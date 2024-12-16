@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { user as crd } from "@/repository/user";
+import { user } from "@/repository/user";
 import { SECRET_KEY as NEXTAUTH_SECRET } from "@/repository/user";
 
 
@@ -37,12 +37,12 @@ secret : NEXTAUTH_SECRET,
           }
 
           // Vérification des identifiants
-          const pwdok = await bcrypt.compare(credentials.password, crd.password);
+          const pwdok = await bcrypt.compare(credentials.password, user.password);
           
-          if (crd.username === credentials.username && pwdok) {
+          if (user.username === credentials.username && pwdok) {
             return {
-              id: crd.username,
-              name: crd.username,
+              id: user.username,
+              name: user.username,
               // Vous pouvez ajouter d'autres propriétés utilisateur ici
             };
           }
@@ -60,7 +60,6 @@ secret : NEXTAUTH_SECRET,
   },
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60, // 24 heures
   },
   callbacks: {
     async jwt({ token, user }) {

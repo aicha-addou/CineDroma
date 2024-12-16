@@ -1,41 +1,35 @@
+import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
 export function middleware(request: NextRequest) {
-  // Récupérer le token depuis les cookies
-  const token = request.cookies.get('auth-token')?.value
-  const isAuthenticated = !!token
-  const path = request.nextUrl.pathname
+  const token = request.cookies.get('next-auth.session-token')?.value 
+  || request.cookies.get('__Secure-next-auth.session-token')?.value;  
+  const { pathname } = request.nextUrl;
 
-  // Création de l'URL de redirection
-  const loginUrl = new URL('/login', request.url)
-  const dashboardUrl = new URL('/accueil', request.url)
+  console.log("Middleware actif, token :", token);
+  console.log("Requête pour :", pathname);
 
-  // Règle 1 & 2 : Gestion de la route "/"
-  if (path === '/') {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(loginUrl)
-    } else {
-      return NextResponse.redirect(dashboardUrl)
+  // Si l'utilisateur n'est pas authentifié
+  if (!token) {
+    if (pathname === "/" || pathname.startsWith("/accueil")) {
+      const loginUrl = new URL("/login", request.url);
+      return NextResponse.redirect(loginUrl);
     }
+    return NextResponse.next();
   }
-
-  // Règle 3 : Utilisateur authentifié essayant d'accéder à /login
-  if (path === '/login' && isAuthenticated) {
-    return NextResponse.redirect(dashboardUrl)
-  }
-
-  // Règle 4 & 5 : Protection des routes /dashboard/*
-  if (path.startsWith('/app/accueil')) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(loginUrl)
+  // Si l'utilisateur est authentifié
+  else {
+    if (pathname === "/login") {
+      const dashboardUrl = new URL("/accueil", request.url);
+      return NextResponse.redirect(dashboardUrl);
     }
+    return NextResponse.next();
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
-// Configuration des chemins sur lesquels le middleware doit s'exécuter
+// Matcher pour appliquer le middleware sur les routes nécessaires
 export const config = {
-  matcher: ['/', '/app/login', '/app/accueil/:path*']
-}
+  matcher: ["/", "/login", "/accueil/:path*"],
+};
